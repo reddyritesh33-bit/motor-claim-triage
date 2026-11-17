@@ -1,0 +1,196 @@
+# Motor Claim Intake & Triage - full stack.
+#   cp .env.example .env && docker compose up --build
+#   docker compose up --scale coverage-agent=3          (A7)
+#   docker compose --profile loadtest run --rm locust bash loadtest/run_steps.sh scale1 "10 20 40 60"
+#   docker compose --profile tools run --rm eval --label baseline
+# Deployment boundaries are explained in docs/ARCHITECTURE.md.
+name: claimtriage
+
+x-app-build: &app-build
+  context: .
+  dockerfile: docker/Dockerfile
+  target: app
+x-retriever-build: &retriever-build
+  context: .
+  dockerfile: docker/Dockerfile.retriever
+  args:
+    EMBEDDING_MODEL: ${EMBEDDING_MODEL:?set EMBEDDING_MODEL in .env (cp .env.example .env)}
+x-py-health: &py-health
+  interval: 5s
+  timeout: 3s
+  retries: 40
+  start_period: 10s
+
+services:
+  redis:
+    image: redis:7.4.1-alpine
+    command: ["redis-server", "--appendonly", "yes", "--save", "60", "1000"]
+    volumes: [redis-data:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.62.0
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports: ["16686:16686"]
+
+  # one-shot, idempotent ingestion; retriever starts only after it succeeds
+  ingest:
+    build: *retriever-build
+    image: claimtriage-retriever:latest
+    env_file: [.env]
+    environment:
+      SERVICE_NAME: ingest
+      INDEX_DIR: /data/index
+      CORPUS_DIR: /app/corpus
+      OTEL_ENABLED: "false"
+    command: ["python", "-m", "claimtriage.retriever.ingest"]
+    volumes: [index-data:/data/index]
+    restart: "no"
+
+  retriever:
+    build: *retriever-build
+    image: claimtriage-retriever:latest
+    env_file: [.env]
+    environment:
+      INDEX_DIR: /data/index
+      CORPUS_DIR: /app/corpus
+    command: ["uvicorn", "claimtriage.retriever.service:app", "--host", "0.0.0.0", "--port", "8001"]
+    volumes: [index-data:/data/index]
+    depends_on:
+      ingest: {condition: service_completed_successfully}
+      redis: {condition: service_healthy}
+    healthcheck:
+      <<: *py-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health', timeout=2)"]
+      start_period: 60s
+    deploy:
+      resources:
+        limits: {cpus: "2.0", memory: 2g}
+    restart: unless-stopped
+
+  llm-gateway:
+    build: *app-build
+    image: claimtriage-app:latest
+    env_file: [.env]
+    command: ["uvicorn", "claimtriage.gateway.service:app", "--host", "0.0.0.0", "--port", "8002"]
+    healthcheck:
+      <<: *py-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/health', timeout=2)"]
+    restart: unless-stopped
+
+  triage-agent:
+    build: *app-build
+    image: claimtriage-app:latest
+    env_file: [.env]
+    environment:
+      AGENT_ROLE: triage
+    command: ["python", "-m", "claimtriage.agents.worker"]
+    depends_on:
+      redis: {condition: service_healthy}
+      retriever: {condition: service_healthy}
+      llm-gateway: {condition: service_healthy}
+    healthcheck:
+      <<: *py-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9100/metrics', timeout=2)"]
+    restart: unless-stopped
+
+  # the scalable agent tier: no container_name and no host ports, so --scale works
+  coverage-agent:
+    build: *app-build
+    image: claimtriage-app:latest
+    env_file: [.env]
+    environment:
+      AGENT_ROLE: coverage
+    command: ["python", "-m", "claimtriage.agents.worker"]
+    depends_on:
+      redis: {condition: service_healthy}
+      retriever: {condition: service_healthy}
+      llm-gateway: {condition: service_healthy}
+    healthcheck:
+      <<: *py-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:9100/metrics', timeout=2)"]
+    restart: unless-stopped
+
+  api:
+    build: *app-build
+    image: claimtriage-app:latest
+    env_file: [.env]
+    command: ["uvicorn", "claimtriage.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports: ["8000:8000"]
+    depends_on:
+      redis: {condition: service_healthy}
+      retriever: {condition: service_healthy}
+      llm-gateway: {condition: service_healthy}
+    healthcheck:
+      <<: *py-health
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"]
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports: ["9090:9090"]
+    depends_on: [api]
+
+  grafana:
+    image: grafana/grafana:11.3.1
+    env_file: [.env]
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/claimtriage.json
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports: ["3000:3000"]
+    depends_on: [prometheus]
+
+  # ---------------- optional tooling (profiles) ----------------
+  locust:
+    profiles: [loadtest]
+    build:
+      <<: *app-build
+      target: loadtest
+    image: claimtriage-loadtest:latest
+    env_file: [.env]
+    environment:
+      LOCUST_HOST: http://api:8000
+    working_dir: /app
+    command: ["locust", "-f", "loadtest/locustfile.py", "--host", "http://api:8000"]
+    ports: ["8089:8089"]
+    volumes: [./loadtest/results:/app/loadtest/results]
+    depends_on: [api]
+
+  eval:
+    profiles: [tools]
+    build: *app-build
+    image: claimtriage-app:latest
+    env_file: [.env]
+    entrypoint: ["python", "-m", "claimtriage.evaluation.run_eval"]
+    volumes: [./eval/results:/app/eval/results]
+    depends_on: [api]
+
+  cadvisor:
+    profiles: [cadvisor]
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports: ["8080:8080"]
+
+volumes:
+  redis-data:
+  index-data:
+  prometheus-data:
+  grafana-data:

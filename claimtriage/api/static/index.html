@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claim Triage Desk</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2330; --mute:#5b6475; --line:#dde1e8; --acc:#2557d6;
+          --ok:#1d7a46; --warn:#a15c00; --bad:#b42318; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14171c; --card:#1c2027; --ink:#e7eaf0; --mute:#9aa3b5;
+          --line:#2c323c; --acc:#7aa2ff; --ok:#4cc38a; --warn:#f0b35a; --bad:#ff7b72; } }
+  * { box-sizing:border-box } body { margin:0; font:14px/1.45 system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink) }
+  header { padding:14px 20px; border-bottom:1px solid var(--line); background:var(--card) }
+  header h1 { margin:0; font-size:17px } header p { margin:2px 0 0; color:var(--mute); font-size:12.5px }
+  main { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.2fr); gap:16px; padding:16px 20px; max-width:1400px; margin:auto }
+  @media (max-width:900px){ main{ grid-template-columns:1fr; padding:12px 16px } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:14px }
+  h2 { font-size:14px; margin:0 0 10px } label { color:var(--mute); font-size:12.5px }
+  select, textarea, input[type=text] { width:100%; font:12.5px ui-monospace,Consolas,monospace; background:var(--bg); color:var(--ink);
+          border:1px solid var(--line); border-radius:6px; padding:8px }
+  textarea { height:430px; resize:vertical }
+  button { background:var(--acc); color:#fff; border:0; border-radius:6px; padding:8px 14px; font-weight:600; cursor:pointer }
+  button.secondary { background:transparent; color:var(--acc); border:1px solid var(--acc) }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:8px 0 }
+  .pill { display:inline-block; padding:2px 8px; border-radius:99px; font-size:12px; font-weight:600; border:1px solid currentColor }
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .bad{color:var(--bad)} .mute{color:var(--mute)}
+  dl { display:grid; grid-template-columns:150px 1fr; gap:4px 10px; margin:0 } dt { color:var(--mute) } dd { margin:0 }
+  .cite { border-left:3px solid var(--acc); padding:6px 10px; margin:8px 0; background:var(--bg); border-radius:0 6px 6px 0 }
+  .cite b { font-family:ui-monospace,Consolas,monospace } pre { white-space:pre-wrap; word-break:break-word; font-size:12px; margin:0 }
+  .notice { font-size:12px; color:var(--mute); margin-top:10px }
+  ul { margin:4px 0 4px 18px; padding:0 }
+</style>
+</head>
+<body>
+<header>
+  <h1>Motor Claim Intake &amp; Triage</h1>
+  <p>Advisory only: the system recommends a route with cited policy clauses. A human claims handler decides.</p>
+</header>
+<main>
+  <section class="card">
+    <h2>1. First Notice of Loss</h2>
+    <label for="sample">Load a sample scenario</label>
+    <select id="sample"></select>
+    <div class="row">
+      <label><input type="checkbox" id="fault"> inject unsupported citation (demo; needs FAULT_INJECTION_ENABLED)</label>
+    </div>
+    <textarea id="fnol" spellcheck="false" aria-label="FNOL JSON"></textarea>
+    <div class="row">
+      <button id="submit">Submit FNOL</button>
+      <span id="submitStatus" class="mute"></span>
+    </div>
+  </section>
+  <section class="card" aria-live="polite">
+    <h2>2. Recommendation</h2>
+    <div id="result" class="mute">Submit an FNOL to see the routed recommendation.</div>
+  </section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let samples = [], pollTimer = null, currentRun = null;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+
+async function loadSamples() {
+  samples = await (await fetch("/samples.json")).json();
+  $("sample").innerHTML = samples.map((s, i) => `<option value="${i}">${esc(s.id)} - ${esc(s.title)}</option>`).join("");
+  const i = samples.findIndex(s => s.id === "S03");
+  $("sample").value = i >= 0 ? i : 0; showSample();
+}
+function showSample() { $("fnol").value = JSON.stringify(samples[$("sample").value].fnol, null, 2); }
+$("sample").onchange = showSample;
+
+$("submit").onclick = async () => {
+  clearInterval(pollTimer);
+  let body;
+  try { body = JSON.parse($("fnol").value); } catch { body = null; }
+  if (body && body.claim_reference === "FNOL-000000") body.claim_reference = "FNOL-" + Date.now().toString().slice(-10);
+  const headers = {"content-type": "application/json", "x-client-id": "web-client"};
+  if ($("fault").checked) headers["x-fault"] = "bad_citation";
+  $("submitStatus").textContent = "submitting...";
+  const r = await fetch("/v1/claims", {method: "POST", headers, body: body ? JSON.stringify(body) : $("fnol").value});
+  const data = await r.json();
+  if (r.status === 422) {
+    $("submitStatus").innerHTML = `<span class="bad">rejected (${esc(data.reason)})</span>`;
+    $("result").innerHTML = `<p><span class="pill bad">REJECTED &amp; QUARANTINED</span> ${esc(data.quarantine_id)}</p>
+      <p>No agent run was started (<code>agent_run_started: ${data.agent_run_started}</code>).</p>
+      <ul>${data.errors.map(e => `<li><code>${esc(e.loc)}</code>: ${esc(e.msg || e.rule)} ${e.match ? "- <i>" + esc(e.match) + "</i>" : ""}</li>`).join("")}</ul>`;
+    return;
+  }
+  if (r.status === 429) { $("submitStatus").innerHTML = `<span class="warn">rate limited</span>`; return; }
+  currentRun = data.run_id;
+  $("submitStatus").textContent = `run ${data.run_id} ${data.cache_hit ? "(cache hit)" : "queued"}`;
+  const t0 = Date.now();
+  pollTimer = setInterval(async () => {
+    const run = await (await fetch(`/v1/runs/${data.run_id}`)).json();
+    $("submitStatus").textContent = `run ${data.run_id}: ${run.status} / ${run.stage} (${((Date.now() - t0) / 1000).toFixed(1)} s)`;
+    if (["completed", "escalated", "failed"].includes(run.status)) { clearInterval(pollTimer); render(run); }
+  }, 1000);
+};
+
+function posClass(p) { return {likely_covered: "ok", covered_with_conditions: "warn", likely_not_covered: "bad"}[p] || "mute"; }
+
+function render(run) {
+  const r = run.result || {}, esc_ = r.escalation || {};
+  const v = r.verification || {};
+  $("result").innerHTML = `
+    <div class="row">
+      <span class="pill ${esc_.escalated ? "warn" : "ok"}">${esc_.escalated ? "ESCALATED TO HUMAN" : "ROUTED"}</span>
+      <span class="pill">route: ${esc(r.route || "none")}</span>
+      <span class="pill ${posClass(r.coverage_position)}">${esc(r.coverage_position)}</span>
+      ${run.cache_hit ? '<span class="pill mute">run cache hit</span>' : ""}
+    </div>
+    <dl>
+      <dt>Claim type</dt><dd>${esc(r.claim_type)}</dd>
+      <dt>Route reasons</dt><dd><ul>${(r.route_reasons || []).map(x => `<li>${esc(x)}</li>`).join("") || "<li>-</li>"}</ul></dd>
+      <dt>Rationale</dt><dd>${esc(r.rationale)}</dd>
+      <dt>Escalation</dt><dd>${esc_.escalated ? `${esc(esc_.path)}<ul>${esc_.reasons.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "none"}</dd>
+      <dt>Verification</dt><dd>${v.passed === true ? '<span class="ok">passed</span>' : v.passed === false ? '<span class="bad">failed</span>' : "-"}
+          ${v.attempts ? `after ${v.attempts} attempt(s)` : ""} ${(v.failures || []).length ? `<ul>${v.failures.map(f => `<li>${esc(f.check)}: ${esc(f.detail)}</li>`).join("")}</ul>` : ""}</dd>
+      <dt>Flags</dt><dd>${esc((r.flags || []).join(", ") || "-")}</dd>
+      <dt>Cost / latency</dt><dd>$${(run.cost?.total_usd ?? 0).toFixed(5)} - ${run.e2e_seconds ?? "-"} s - prompts ${esc(JSON.stringify(run.prompt_versions || {}))}</dd>
+      <dt>Trace</dt><dd><a href="/v1/runs/${esc(run.run_id)}/trace" target="_blank">full run reconstruction (JSON)</a></dd>
+    </dl>
+    <h2 style="margin-top:14px">Citations (${(r.citations || []).length})</h2>
+    ${(r.citations || []).map(c => `<div class="cite"><b>${esc(c.clause_id)}</b> <span class="mute">${esc(c.doc_title)} - ${esc(c.section)} - p.${esc(c.page)}</span><pre>"${esc(c.quote)}"</pre></div>`).join("") || '<p class="mute">none</p>'}
+    <h2 style="margin-top:14px">Feedback</h2>
+    <div class="row"><input type="text" id="fbReason" placeholder="reason (required)">
+      <button id="fbYes">Satisfactory</button><button class="secondary" id="fbNo">Not satisfactory</button>
+      <span id="fbStatus" class="mute"></span></div>
+    <p class="notice">${esc(r.advisory_notice || "")}</p>`;
+  const send = async ok => {
+    const reason = $("fbReason").value.trim() || (ok ? "looks right" : "");
+    if (reason.length < 3) { $("fbStatus").textContent = "enter a reason"; return; }
+    const fr = await fetch(`/v1/runs/${run.run_id}/feedback`, {method: "POST", headers: {"content-type": "application/json"},
+      body: JSON.stringify({satisfactory: ok, reason})});
+    $("fbStatus").textContent = fr.ok ? "recorded" : "error";
+  };
+  $("fbYes").onclick = () => send(true); $("fbNo").onclick = () => send(false);
+}
+loadSamples();
+</script>
+</body>
+</html>

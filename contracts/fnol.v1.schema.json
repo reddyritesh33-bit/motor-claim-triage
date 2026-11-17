@@ -1,0 +1,359 @@
+{
+  "$defs": {
+    "Channel": {
+      "enum": [
+        "call_centre",
+        "app",
+        "web"
+      ],
+      "title": "Channel",
+      "type": "string"
+    },
+    "Claimant": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 80,
+          "minLength": 2,
+          "title": "Name",
+          "type": "string"
+        },
+        "phone": {
+          "pattern": "^[6-9][0-9]{9}$",
+          "title": "Phone",
+          "type": "string"
+        },
+        "email": {
+          "anyOf": [
+            {
+              "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Email"
+        }
+      },
+      "required": [
+        "name",
+        "phone"
+      ],
+      "title": "Claimant",
+      "type": "object"
+    },
+    "Driver": {
+      "additionalProperties": false,
+      "properties": {
+        "driver_is_insured": {
+          "title": "Driver Is Insured",
+          "type": "boolean"
+        },
+        "name": {
+          "maxLength": 80,
+          "minLength": 2,
+          "title": "Name",
+          "type": "string"
+        },
+        "licence_number": {
+          "pattern": "^[A-Z]{2}[0-9]{2}[ -]?[0-9]{4}[0-9]{7}$|^[A-Z]{2}-?[0-9]{13}$",
+          "title": "Licence Number",
+          "type": "string"
+        },
+        "licence_valid_until": {
+          "format": "date",
+          "title": "Licence Valid Until",
+          "type": "string"
+        }
+      },
+      "required": [
+        "driver_is_insured",
+        "name",
+        "licence_number",
+        "licence_valid_until"
+      ],
+      "title": "Driver",
+      "type": "object"
+    },
+    "FuelType": {
+      "enum": [
+        "petrol",
+        "diesel",
+        "cng",
+        "electric",
+        "hybrid"
+      ],
+      "title": "FuelType",
+      "type": "string"
+    },
+    "Incident": {
+      "additionalProperties": false,
+      "properties": {
+        "date_of_loss": {
+          "format": "date-time",
+          "title": "Date Of Loss",
+          "type": "string"
+        },
+        "reported_at": {
+          "format": "date-time",
+          "title": "Reported At",
+          "type": "string"
+        },
+        "location": {
+          "$ref": "#/$defs/Location"
+        },
+        "description": {
+          "maxLength": 4000,
+          "minLength": 20,
+          "title": "Description",
+          "type": "string"
+        },
+        "police_report_filed": {
+          "title": "Police Report Filed",
+          "type": "boolean"
+        },
+        "fir_number": {
+          "anyOf": [
+            {
+              "maxLength": 40,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fir Number"
+        },
+        "third_party_involved": {
+          "title": "Third Party Involved",
+          "type": "boolean"
+        },
+        "injuries": {
+          "$ref": "#/$defs/Injuries"
+        },
+        "vehicle_driveable": {
+          "title": "Vehicle Driveable",
+          "type": "boolean"
+        },
+        "estimated_repair_cost_inr": {
+          "anyOf": [
+            {
+              "maximum": 10000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimated Repair Cost Inr"
+        },
+        "cashless_requested": {
+          "default": false,
+          "title": "Cashless Requested",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "date_of_loss",
+        "reported_at",
+        "location",
+        "description",
+        "police_report_filed",
+        "third_party_involved",
+        "injuries",
+        "vehicle_driveable"
+      ],
+      "title": "Incident",
+      "type": "object"
+    },
+    "Injuries": {
+      "enum": [
+        "none",
+        "minor",
+        "serious",
+        "fatal"
+      ],
+      "title": "Injuries",
+      "type": "string"
+    },
+    "Location": {
+      "additionalProperties": false,
+      "properties": {
+        "city": {
+          "maxLength": 60,
+          "minLength": 2,
+          "title": "City",
+          "type": "string"
+        },
+        "state": {
+          "maxLength": 60,
+          "minLength": 2,
+          "title": "State",
+          "type": "string"
+        },
+        "pincode": {
+          "pattern": "^[1-9][0-9]{5}$",
+          "title": "Pincode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "city",
+        "state",
+        "pincode"
+      ],
+      "title": "Location",
+      "type": "object"
+    },
+    "Policy": {
+      "additionalProperties": false,
+      "properties": {
+        "policy_number": {
+          "pattern": "^[A-Z0-9/-]{6,30}$",
+          "title": "Policy Number",
+          "type": "string"
+        },
+        "product_uin": {
+          "maxLength": 40,
+          "minLength": 8,
+          "title": "Product Uin",
+          "type": "string"
+        },
+        "policy_start_date": {
+          "format": "date",
+          "title": "Policy Start Date",
+          "type": "string"
+        },
+        "policy_end_date": {
+          "format": "date",
+          "title": "Policy End Date",
+          "type": "string"
+        },
+        "vehicle_class": {
+          "$ref": "#/$defs/VehicleClass"
+        },
+        "idv_inr": {
+          "maximum": 50000000,
+          "minimum": 10000,
+          "title": "Idv Inr",
+          "type": "integer"
+        },
+        "addons": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Addons",
+          "type": "array"
+        }
+      },
+      "required": [
+        "policy_number",
+        "product_uin",
+        "policy_start_date",
+        "policy_end_date",
+        "vehicle_class",
+        "idv_inr"
+      ],
+      "title": "Policy",
+      "type": "object"
+    },
+    "Vehicle": {
+      "additionalProperties": false,
+      "properties": {
+        "registration_number": {
+          "title": "Registration Number",
+          "type": "string"
+        },
+        "make": {
+          "maxLength": 40,
+          "minLength": 2,
+          "title": "Make",
+          "type": "string"
+        },
+        "model": {
+          "maxLength": 60,
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "year_of_manufacture": {
+          "maximum": 2100,
+          "minimum": 1980,
+          "title": "Year Of Manufacture",
+          "type": "integer"
+        },
+        "fuel_type": {
+          "$ref": "#/$defs/FuelType"
+        }
+      },
+      "required": [
+        "registration_number",
+        "make",
+        "model",
+        "year_of_manufacture",
+        "fuel_type"
+      ],
+      "title": "Vehicle",
+      "type": "object"
+    },
+    "VehicleClass": {
+      "enum": [
+        "private_car",
+        "two_wheeler",
+        "commercial_goods",
+        "commercial_passenger"
+      ],
+      "title": "VehicleClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "claim_reference": {
+      "pattern": "^FNOL-[0-9]{6,12}$",
+      "title": "Claim Reference",
+      "type": "string"
+    },
+    "channel": {
+      "$ref": "#/$defs/Channel"
+    },
+    "policy": {
+      "$ref": "#/$defs/Policy"
+    },
+    "vehicle": {
+      "$ref": "#/$defs/Vehicle"
+    },
+    "incident": {
+      "$ref": "#/$defs/Incident"
+    },
+    "driver": {
+      "$ref": "#/$defs/Driver"
+    },
+    "claimant": {
+      "$ref": "#/$defs/Claimant"
+    }
+  },
+  "required": [
+    "claim_reference",
+    "channel",
+    "policy",
+    "vehicle",
+    "incident",
+    "driver",
+    "claimant"
+  ],
+  "title": "FNOL",
+  "type": "object"
+}

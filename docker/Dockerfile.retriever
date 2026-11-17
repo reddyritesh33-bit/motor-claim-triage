@@ -1,0 +1,22 @@
+# syntax=docker/dockerfile:1
+# Retriever + ingestion image: torch (CPU), sentence-transformers, FAISS.
+# The embedding model is downloaded at BUILD time (id passed from .env as a
+# build arg), so the running container needs no internet and starts fast.
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_DEFAULT_TIMEOUT=120 PIP_RETRIES=10 HF_HOME=/models TOKENIZERS_PARALLELISM=false
+WORKDIR /app
+COPY requirements/base.txt requirements/retriever.txt requirements/
+# BuildKit cache: a failed/retried build reuses wheels already downloaded (slow networks, INC-006)
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements/retriever.txt
+ARG EMBEDDING_MODEL
+RUN test -n "$EMBEDDING_MODEL" || (echo "EMBEDDING_MODEL build arg missing - create .env from .env.example" && exit 1)
+# Optional pre-seeded Hugging Face cache (docker/hf_cache/hub/...). Empty on a clean clone, in which
+# case the model is downloaded below; when present it saves ~90 MB on slow networks (INC-006).
+COPY docker/hf_cache /models
+RUN python -c "import sys; from sentence_transformers import SentenceTransformer; SentenceTransformer(sys.argv[1])" "$EMBEDDING_MODEL"
+ENV HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+COPY claimtriage ./claimtriage
+COPY corpus ./corpus
+RUN useradd --create-home --uid 10001 app && mkdir -p /data/index && chown -R app /app /data /models
+USER app

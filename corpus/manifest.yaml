@@ -1,0 +1,30 @@
+# Corpus manifest - one insurer, one product (Universal Sompo General Insurance,
+# Motor Private Car Package Policy, UIN IRDAN134RP0004V03200708).
+# Both documents are public, text-layer PDFs from the insurer's website.
+# The ingestion pipeline records each file's sha256 at index time (data freshness, D2).
+insurer: Universal Sompo General Insurance Co. Ltd.
+product: Motor Private Car - Package Policy
+product_uin: IRDAN134RP0004V03200708
+documents:
+  - id: policy_wording
+    code: PW
+    title: Policy Wording
+    file: universal_sompo_private_car_package_policy_wording.pdf
+    uin: IRDAN134RP0004V03200708
+    version: "V03 (60 pp)"
+    role: Full policy wording - cover, add-ons, general exclusions, conditions and SECTION IX CLAIM PROCEDURE
+      (the insurer's claims procedure, intimation timelines, admissibility checks, documents list)
+    source_url: https://www.universalsompo.com/assets/file/motor-private-car/motor-private-car-policy-wordings.pdf
+    retrieved: "2026-10-27"
+    sha256: a4510a2dabfb58349c0f2703e8c6b98bdacd824140d1440f14db2e40491133d7
+  - id: prospectus
+    code: PR
+    title: Prospectus
+    file: universal_sompo_private_car_package_prospectus.pdf
+    uin: IRDAN134RP0004V03200708
+    version: "V03 (49 pp)"
+    role: Product prospectus - states the permitted use of the vehicle (the 'Limitations as to Use' that
+      General Exclusion 3(a) of the wording refers to) plus a restatement of cover and exclusions
+    source_url: https://universalsompo.com/assets/file/motor-private-car/motor-private-car-prospectus.pdf
+    retrieved: "2026-10-27"
+    sha256: e9134d913c6a593727892aa65d9699f8bdc9ea10f5704cf1098dadf1afdadbc7

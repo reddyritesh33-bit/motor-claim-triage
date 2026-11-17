@@ -1,0 +1,172 @@
+{
+  "$defs": {
+    "Citation": {
+      "properties": {
+        "clause_id": {
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "doc_title": {
+          "default": "",
+          "title": "Doc Title",
+          "type": "string"
+        },
+        "section": {
+          "default": "",
+          "title": "Section",
+          "type": "string"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "quote": {
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clause_id",
+        "quote"
+      ],
+      "title": "Citation",
+      "type": "object"
+    },
+    "Escalation": {
+      "properties": {
+        "escalated": {
+          "title": "Escalated",
+          "type": "boolean"
+        },
+        "reasons": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "path": {
+          "default": "",
+          "title": "Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "escalated"
+      ],
+      "title": "Escalation",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "claim_type": {
+      "enum": [
+        "own_damage",
+        "third_party",
+        "theft",
+        "total_loss",
+        "unknown"
+      ],
+      "title": "Claim Type",
+      "type": "string"
+    },
+    "entities": {
+      "default": {},
+      "title": "Entities",
+      "type": "object"
+    },
+    "coverage_position": {
+      "enum": [
+        "likely_covered",
+        "covered_with_conditions",
+        "likely_not_covered",
+        "indeterminate"
+      ],
+      "title": "Coverage Position",
+      "type": "string"
+    },
+    "route": {
+      "anyOf": [
+        {
+          "enum": [
+            "fast_track",
+            "surveyor",
+            "investigation"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Route"
+    },
+    "route_reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Route Reasons",
+      "type": "array"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "citations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Citation"
+      },
+      "title": "Citations",
+      "type": "array"
+    },
+    "modifiers_considered": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Modifiers Considered",
+      "type": "array"
+    },
+    "escalation": {
+      "$ref": "#/$defs/Escalation"
+    },
+    "verification": {
+      "default": {},
+      "title": "Verification",
+      "type": "object"
+    },
+    "flags": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Flags",
+      "type": "array"
+    },
+    "advisory_notice": {
+      "default": "Advisory recommendation only. The system does not approve or reject claims; a human claims handler decides.",
+      "title": "Advisory Notice",
+      "type": "string"
+    }
+  },
+  "required": [
+    "claim_type",
+    "coverage_position",
+    "route",
+    "rationale",
+    "escalation"
+  ],
+  "title": "Recommendation",
+  "type": "object"
+}

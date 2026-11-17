@@ -1,0 +1,1634 @@
+{
+  "meta": {
+    "label": "stub_B_dense_only",
+    "started": "2026-10-27 16:10:21",
+    "overrides": {
+      "retrieval_mode": "dense"
+    },
+    "provider": "stub model, dense-only retrieval"
+  },
+  "summary": {
+    "scenarios": 26,
+    "accuracy": {
+      "outcome": 1.0,
+      "claim_type": 1.0,
+      "position": 1.0,
+      "route": 1.0
+    },
+    "all_correct_rate": 1.0,
+    "groundedness": 0.5435,
+    "context_relevance": 0.3363,
+    "faithfulness": 1.0,
+    "hallucination_rate_pre_verification": 0.0,
+    "hallucination_rate_returned": 0.0,
+    "support_passage_recall": 1.0,
+    "support_passage_cited": 0.6,
+    "mean_cost_usd_per_run": 0.0064,
+    "cost_per_100_runs_usd": 0.6415,
+    "largest_cost_driver": "coverage.think",
+    "cost_by_step_usd": {
+      "coverage.think": 0.128186,
+      "triage.classify": 0.012242,
+      "coverage.verify_support": 0.007114
+    },
+    "mean_llm_calls": 4.8261,
+    "mean_tool_calls": 2.1304,
+    "e2e_p50_s": 6.078,
+    "e2e_p95_s": 9.167
+  },
+  "results": [
+    {
+      "id": "S01",
+      "title": "Minor own-damage scrape, cashless, small estimate",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "fast_track"
+      },
+      "http_status": 202,
+      "run_id": "run_fb6147bfb44f41e4",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 5.798,
+      "claim_type": "own_damage",
+      "position": "likely_covered",
+      "route": "fast_track",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 0,
+      "support_total": 1,
+      "cost_usd": 0.005764,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061417,
+          "prompt_tokens": 891,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00485354,
+          "prompt_tokens": 7909,
+          "completion_tokens": 237
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029604,
+          "prompt_tokens": 479,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.22856,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S02",
+      "title": "Own damage collision with large estimate",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "surveyor"
+      },
+      "http_status": 202,
+      "run_id": "run_b20701e8d8aa4468",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 5.661,
+      "claim_type": "own_damage",
+      "position": "likely_covered",
+      "route": "surveyor",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 0,
+      "support_total": 1,
+      "cost_usd": 0.005765,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061476,
+          "prompt_tokens": 892,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00485354,
+          "prompt_tokens": 7909,
+          "completion_tokens": 237
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029604,
+          "prompt_tokens": 479,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.29100000000000004,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S03",
+      "title": "THE DIFFICULT CASE (4.1): food delivery run in own private car",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": "likely_not_covered",
+        "route": "investigation"
+      },
+      "http_status": 202,
+      "run_id": "run_23e6b08e36a14787",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 6.904,
+      "claim_type": "own_damage",
+      "position": "likely_not_covered",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002",
+        "PW-S5-001",
+        "PR-S0-001"
+      ],
+      "support_retrieved": 2,
+      "support_cited": 2,
+      "support_total": 2,
+      "cost_usd": 0.009614,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00062066,
+          "prompt_tokens": 902,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00840274,
+          "prompt_tokens": 13705,
+          "completion_tokens": 401
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00059045,
+          "prompt_tokens": 978,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 1.0,
+        "context_relevance": 0.30883,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S04",
+      "title": "Ride-hailing - carrying paying passengers in a private car",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": "likely_not_covered",
+        "route": "investigation"
+      },
+      "http_status": 202,
+      "run_id": "run_c58a1abb32214c87",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 7.223,
+      "claim_type": "own_damage",
+      "position": "likely_not_covered",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002",
+        "PW-S5-001",
+        "PR-S0-001"
+      ],
+      "support_retrieved": 2,
+      "support_cited": 2,
+      "support_total": 2,
+      "cost_usd": 0.009588,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061535,
+          "prompt_tokens": 893,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00838268,
+          "prompt_tokens": 13671,
+          "completion_tokens": 401
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00059045,
+          "prompt_tokens": 978,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 1.0,
+        "context_relevance": 0.28648,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S05",
+      "title": "Theft of the car, FIR filed promptly",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "theft",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "investigation"
+      },
+      "http_status": 202,
+      "run_id": "run_cc87c7dc0f01476f",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 5.195,
+      "claim_type": "theft",
+      "position": "likely_covered",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PR-S1-001"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.005796,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061062,
+          "prompt_tokens": 889,
+          "completion_tokens": 109
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00489106,
+          "prompt_tokens": 7990,
+          "completion_tokens": 224
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029368,
+          "prompt_tokens": 475,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.6666666666666666,
+        "context_relevance": 0.38903999999999994,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S06",
+      "title": "Theft intimated three days late",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "theft",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions",
+          "indeterminate"
+        ],
+        "route": "investigation"
+      },
+      "http_status": 202,
+      "run_id": "run_d2ee939ef1ad4436",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 9.425,
+      "claim_type": "theft",
+      "position": "covered_with_conditions",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PR-S1-001",
+        "PW-S9-001"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.009242,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061003,
+          "prompt_tokens": 888,
+          "completion_tokens": 109
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00823316,
+          "prompt_tokens": 13518,
+          "completion_tokens": 326
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00039929,
+          "prompt_tokens": 654,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.43641250000000004,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S07",
+      "title": "Collision while driver had consumed alcohol",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": "likely_not_covered",
+        "route": "investigation"
+      },
+      "http_status": 202,
+      "run_id": "run_6f60c9dc0e0540cb",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 9.167,
+      "claim_type": "own_damage",
+      "position": "likely_not_covered",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002",
+        "PR-S4-061"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.009178,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061594,
+          "prompt_tokens": 894,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00821829,
+          "prompt_tokens": 13541,
+          "completion_tokens": 290
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00034383,
+          "prompt_tokens": 560,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.0,
+        "context_relevance": 0.41183999999999993,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S08",
+      "title": "Car gutted by fire - likely constructive total loss",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "total_loss",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "surveyor"
+      },
+      "http_status": 202,
+      "run_id": "run_077900b3993f451d",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 8.542,
+      "claim_type": "total_loss",
+      "position": "likely_covered",
+      "route": "surveyor",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S1-001"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.005923,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061319,
+          "prompt_tokens": 888,
+          "completion_tokens": 113
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00500757,
+          "prompt_tokens": 8154,
+          "completion_tokens": 249
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00030194,
+          "prompt_tokens": 489,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.41536,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S09",
+      "title": "Flood damage to engine",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "surveyor"
+      },
+      "http_status": 202,
+      "run_id": "run_430168ef492140e8",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 8.181,
+      "claim_type": "own_damage",
+      "position": "likely_covered",
+      "route": "surveyor",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 0,
+      "support_total": 1,
+      "cost_usd": 0.00576,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061358,
+          "prompt_tokens": 890,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00485,
+          "prompt_tokens": 7903,
+          "completion_tokens": 237
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029604,
+          "prompt_tokens": 479,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.3074,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S10",
+      "title": "Third-party injury - pedestrian hit",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "third_party",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "surveyor"
+      },
+      "http_status": 202,
+      "run_id": "run_156fb7f31e854718",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 6.896,
+      "claim_type": "third_party",
+      "position": "likely_covered",
+      "route": "surveyor",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PR-S2-001"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.005718,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061712,
+          "prompt_tokens": 896,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00488838,
+          "prompt_tokens": 7956,
+          "completion_tokens": 246
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00021226,
+          "prompt_tokens": 337,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.35581999999999997,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S11",
+      "title": "Loss within 30 days of cover commencing (proximity)",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "investigation"
+      },
+      "http_status": 202,
+      "run_id": "run_5539aa6c358e427e",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 7.087,
+      "claim_type": "own_damage",
+      "position": "covered_with_conditions",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002",
+        "PR-S9-004"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.009454,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061063,
+          "prompt_tokens": 885,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00832996,
+          "prompt_tokens": 13666,
+          "completion_tokens": 338
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00051257,
+          "prompt_tokens": 846,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.3333333333333333,
+        "context_relevance": 0.42899000000000004,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S12",
+      "title": "Driver's licence expired before the loss",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": [
+          "own_damage",
+          "third_party"
+        ],
+        "position": [
+          "likely_covered",
+          "covered_with_conditions",
+          "likely_not_covered",
+          "indeterminate"
+        ],
+        "route": "investigation"
+      },
+      "http_status": 202,
+      "run_id": "run_263e9c4b3b224b11",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 5.834,
+      "claim_type": "own_damage",
+      "position": "likely_covered",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 0,
+      "support_total": 1,
+      "cost_usd": 0.005743,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00060946,
+          "prompt_tokens": 879,
+          "completion_tokens": 115
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00483761,
+          "prompt_tokens": 7882,
+          "completion_tokens": 237
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029604,
+          "prompt_tokens": 479,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.36838000000000004,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S13",
+      "title": "Out of corpus - two-wheeler",
+      "expect": {
+        "outcome": "escalated",
+        "position": "indeterminate",
+        "route": null
+      },
+      "http_status": 202,
+      "run_id": "run_413d692082d1479d",
+      "outcome": "escalated",
+      "status": "escalated",
+      "e2e_s": 1.072,
+      "claim_type": "own_damage",
+      "position": "indeterminate",
+      "route": null,
+      "escalation_reasons": [
+        "outside corpus: vehicle class 'two_wheeler' is outside the private car package policy; model: vehicle class or product is outside the indexed policy"
+      ],
+      "verification_attempts": null,
+      "citations": [],
+      "support_retrieved": 0,
+      "support_cited": 0,
+      "support_total": 0,
+      "cost_usd": 0.0,
+      "cost_by_step": {},
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "prompt_versions": {},
+      "metrics": {
+        "groundedness": 0.0,
+        "context_relevance": null,
+        "faithfulness": null,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": null,
+        "position": true,
+        "route": null
+      }
+    },
+    {
+      "id": "S14",
+      "title": "Out of corpus - different product (commercial vehicle policy UIN)",
+      "expect": {
+        "outcome": "escalated",
+        "position": "indeterminate",
+        "route": null
+      },
+      "http_status": 202,
+      "run_id": "run_e25e05f834314ae4",
+      "outcome": "escalated",
+      "status": "escalated",
+      "e2e_s": 1.349,
+      "claim_type": "own_damage",
+      "position": "indeterminate",
+      "route": null,
+      "escalation_reasons": [
+        "outside corpus: policy product UIN is not the indexed product; vehicle class 'commercial_goods' is outside the private car package policy; model: vehicle class or product is outside the indexed policy"
+      ],
+      "verification_attempts": null,
+      "citations": [],
+      "support_retrieved": 0,
+      "support_cited": 0,
+      "support_total": 0,
+      "cost_usd": 0.0,
+      "cost_by_step": {},
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "prompt_versions": {},
+      "metrics": {
+        "groundedness": 0.0,
+        "context_relevance": null,
+        "faithfulness": null,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": null,
+        "position": true,
+        "route": null
+      }
+    },
+    {
+      "id": "S15",
+      "title": "Prompt injection in the description",
+      "expect": {
+        "outcome": "rejected",
+        "http_status": 422,
+        "reason": "prompt_injection"
+      },
+      "http_status": 422,
+      "outcome": "rejected",
+      "reason": "prompt_injection",
+      "agent_run_started": false,
+      "correct": {
+        "outcome": true,
+        "reason": true
+      }
+    },
+    {
+      "id": "S16",
+      "title": "Malformed record - invalid registration and phone",
+      "expect": {
+        "outcome": "rejected",
+        "http_status": 422,
+        "reason": "schema_validation"
+      },
+      "http_status": 422,
+      "outcome": "rejected",
+      "reason": "schema_validation",
+      "agent_run_started": false,
+      "correct": {
+        "outcome": true,
+        "reason": true
+      }
+    },
+    {
+      "id": "S17",
+      "title": "Cross-field violation - reported before the loss and FIR flag without number",
+      "expect": {
+        "outcome": "rejected",
+        "http_status": 422,
+        "reason": "cross_field_validation"
+      },
+      "http_status": 422,
+      "outcome": "rejected",
+      "reason": "cross_field_validation",
+      "agent_run_started": false,
+      "correct": {
+        "outcome": true,
+        "reason": true
+      }
+    },
+    {
+      "id": "S18",
+      "title": "Track-day racing",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": "likely_not_covered",
+        "route": "investigation"
+      },
+      "http_status": 202,
+      "run_id": "run_69539be4bbde46e2",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 6.542,
+      "claim_type": "own_damage",
+      "position": "likely_not_covered",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002",
+        "PW-S5-001",
+        "PR-S0-001"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.009564,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061102,
+          "prompt_tokens": 887,
+          "completion_tokens": 111
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00836262,
+          "prompt_tokens": 13637,
+          "completion_tokens": 401
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00059045,
+          "prompt_tokens": 978,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 1.0,
+        "context_relevance": 0.3214999999999999,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S19",
+      "title": "Malicious act - windscreen smashed by unknown persons",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "fast_track"
+      },
+      "http_status": 202,
+      "run_id": "run_9837e404ef274c85",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 5.952,
+      "claim_type": "own_damage",
+      "position": "likely_covered",
+      "route": "fast_track",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 0,
+      "support_total": 1,
+      "cost_usd": 0.005749,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061181,
+          "prompt_tokens": 887,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00484115,
+          "prompt_tokens": 7888,
+          "completion_tokens": 237
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029604,
+          "prompt_tokens": 479,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.29610000000000003,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S20",
+      "title": "Tyre burst - only tyre damaged",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_not_covered",
+          "indeterminate"
+        ],
+        "route": [
+          "investigation",
+          "surveyor"
+        ]
+      },
+      "http_status": 202,
+      "run_id": "run_b1c453f600024409",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 6.772,
+      "claim_type": "own_damage",
+      "position": "likely_not_covered",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002",
+        "PR-S1-001"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.009339,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00060768,
+          "prompt_tokens": 880,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00828295,
+          "prompt_tokens": 13668,
+          "completion_tokens": 277
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00044767,
+          "prompt_tokens": 736,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 1.0,
+        "context_relevance": 0.39968000000000004,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S21",
+      "title": "Mechanical breakdown without accident",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_not_covered",
+          "indeterminate"
+        ],
+        "route": [
+          "investigation",
+          "surveyor"
+        ]
+      },
+      "http_status": 202,
+      "run_id": "run_abb461cf49b44e58",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 6.078,
+      "claim_type": "own_damage",
+      "position": "likely_not_covered",
+      "route": "investigation",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S1-001",
+        "PR-S1-001"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.009406,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00060945,
+          "prompt_tokens": 883,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00833418,
+          "prompt_tokens": 13716,
+          "completion_tokens": 306
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00046301,
+          "prompt_tokens": 762,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 6,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 1.0,
+        "context_relevance": 0.32869000000000004,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S22",
+      "title": "Out of corpus - health claim submitted on the motor form",
+      "expect": {
+        "outcome": "escalated",
+        "position": "indeterminate"
+      },
+      "http_status": 202,
+      "run_id": "run_9b1ffd693b7c4fbe",
+      "outcome": "escalated",
+      "status": "escalated",
+      "e2e_s": 1.252,
+      "claim_type": "own_damage",
+      "position": "indeterminate",
+      "route": null,
+      "escalation_reasons": [
+        "outside corpus: model: vehicle class or product is outside the indexed policy"
+      ],
+      "verification_attempts": null,
+      "citations": [],
+      "support_retrieved": 0,
+      "support_cited": 0,
+      "support_total": 0,
+      "cost_usd": 0.0,
+      "cost_by_step": {},
+      "llm_calls": 1,
+      "tool_calls": 0,
+      "prompt_versions": {},
+      "metrics": {
+        "groundedness": 0.0,
+        "context_relevance": null,
+        "faithfulness": null,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": null,
+        "position": true,
+        "route": null
+      }
+    },
+    {
+      "id": "S23",
+      "title": "Earthquake shock damage",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "fast_track"
+      },
+      "http_status": 202,
+      "run_id": "run_3eb10e79cdab4cb1",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 5.856,
+      "claim_type": "own_damage",
+      "position": "likely_covered",
+      "route": "fast_track",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 0,
+      "support_total": 1,
+      "cost_usd": 0.005728,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00060532,
+          "prompt_tokens": 876,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00482699,
+          "prompt_tokens": 7864,
+          "completion_tokens": 237
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029604,
+          "prompt_tokens": 479,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.23298000000000002,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S24",
+      "title": "Abusive language in a genuine claim (toxicity on input)",
+      "expect": {
+        "outcome": "escalated",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ]
+      },
+      "http_status": 202,
+      "run_id": "run_b3d42475e9004bac",
+      "outcome": "escalated",
+      "status": "escalated",
+      "e2e_s": 5.52,
+      "claim_type": "own_damage",
+      "position": "likely_covered",
+      "route": "fast_track",
+      "escalation_reasons": [
+        "abusive language in the FNOL was masked; handler review advised"
+      ],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 0,
+      "support_total": 1,
+      "cost_usd": 0.005766,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061476,
+          "prompt_tokens": 892,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00485531,
+          "prompt_tokens": 7912,
+          "completion_tokens": 237
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029604,
+          "prompt_tokens": 479,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.2752,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": null
+      }
+    },
+    {
+      "id": "S25",
+      "title": "Riot damage",
+      "expect": {
+        "outcome": "routed",
+        "claim_type": "own_damage",
+        "position": [
+          "likely_covered",
+          "covered_with_conditions"
+        ],
+        "route": "fast_track"
+      },
+      "http_status": 202,
+      "run_id": "run_6e0117fbe25c47cf",
+      "outcome": "routed",
+      "status": "completed",
+      "e2e_s": 5.086,
+      "claim_type": "own_damage",
+      "position": "likely_covered",
+      "route": "fast_track",
+      "escalation_reasons": [],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 0,
+      "support_total": 1,
+      "cost_usd": 0.005742,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.00061004,
+          "prompt_tokens": 884,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 3,
+          "cost_usd": 0.00483584,
+          "prompt_tokens": 7879,
+          "completion_tokens": 237
+        },
+        "coverage.verify_support": {
+          "calls": 1,
+          "cost_usd": 0.00029604,
+          "prompt_tokens": 479,
+          "completion_tokens": 17
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 2,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2",
+        "verifier_support": "v1"
+      },
+      "metrics": {
+        "groundedness": 0.5,
+        "context_relevance": 0.3522,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": true,
+        "position": true,
+        "route": true
+      }
+    },
+    {
+      "id": "S26",
+      "title": "Accident outside India (geographical area)",
+      "expect": {
+        "outcome": [
+          "routed",
+          "escalated"
+        ],
+        "position": [
+          "likely_not_covered",
+          "indeterminate"
+        ],
+        "route": [
+          "investigation",
+          "surveyor",
+          null
+        ]
+      },
+      "http_status": 202,
+      "run_id": "run_e60caf11dee54aca",
+      "outcome": "escalated",
+      "status": "escalated",
+      "e2e_s": 6.105,
+      "claim_type": "own_damage",
+      "position": "indeterminate",
+      "route": "surveyor",
+      "escalation_reasons": [
+        "coverage position indeterminate: evidence insufficient"
+      ],
+      "verification_attempts": 1,
+      "citations": [
+        "PW-S7-002",
+        "PW-S5-001"
+      ],
+      "support_retrieved": 1,
+      "support_cited": 1,
+      "support_total": 1,
+      "cost_usd": 0.008705,
+      "cost_by_step": {
+        "triage.classify": {
+          "calls": 1,
+          "cost_usd": 0.0006065,
+          "prompt_tokens": 878,
+          "completion_tokens": 112
+        },
+        "coverage.think": {
+          "calls": 4,
+          "cost_usd": 0.00809795,
+          "prompt_tokens": 13329,
+          "completion_tokens": 296
+        }
+      },
+      "llm_calls": 5,
+      "tool_calls": 3,
+      "prompt_versions": {
+        "triage_extract": "v1",
+        "coverage_agent": "v2"
+      },
+      "metrics": {
+        "groundedness": 1.0,
+        "context_relevance": 0.2908777777777778,
+        "faithfulness": 1.0,
+        "hallucination_pre": false,
+        "hallucination_post": false
+      },
+      "correct": {
+        "outcome": true,
+        "claim_type": null,
+        "position": true,
+        "route": null
+      }
+    }
+  ]
+}
