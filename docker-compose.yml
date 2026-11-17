@@ -31,12 +31,14 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+    restart: unless-stopped
 
   jaeger:
     image: jaegertracing/all-in-one:1.62.0
     environment:
       COLLECTOR_OTLP_ENABLED: "true"
     ports: ["16686:16686"]
+    restart: unless-stopped
 
   # one-shot, idempotent ingestion; retriever starts only after it succeeds
   ingest:
@@ -138,6 +140,7 @@ services:
       - prometheus-data:/prometheus
     ports: ["9090:9090"]
     depends_on: [api]
+    restart: unless-stopped
 
   grafana:
     image: grafana/grafana:11.3.1
@@ -152,6 +155,7 @@ services:
       - grafana-data:/var/lib/grafana
     ports: ["3000:3000"]
     depends_on: [prometheus]
+    restart: unless-stopped
 
   # ---------------- optional tooling (profiles) ----------------
   locust:
